@@ -56,13 +56,13 @@ class Game:
     def draw_case(self, x, y, val):
         size = self.cote
         rect = pg.Rect(x*size+5, y*size+5, size-10, size-10)
-        pg.draw.rect(screen, self.colors[val], rect)
+        pg.draw.rect(screen, self.colors[val], rect, border_radius=3)
 
         if val:
             if val < 10:
                 font_size = 65
             else:
-                font_size = 50
+                font_size = 45
             font_obj = pg.font.SysFont("Helvetica Neue", font_size)
             digit = font_obj.render(str(2**val), True, (255, 255, 255))
             text_rect = digit.get_rect(center=((x+.5)*size, (y+.5)*size))
@@ -93,6 +93,7 @@ class Game:
         return new_line
 
     def move(self, dir):
+        self.prev_grid = self.grid.copy()
         if dir in ['LEFT', 'RIGHT']:
             self.grid = self.grid.T
         for i, row in enumerate(self.grid):
@@ -103,7 +104,6 @@ class Game:
             self.grid[i] = new_line
         if dir in ['LEFT', 'RIGHT']:
             self.grid = self.grid.T
-
 
 game = Game(NB_CASES, COTE)
 game.new_case()
@@ -119,6 +119,7 @@ while running:
         if event.type == pg.QUIT:
             running = False
         elif event.type == pg.KEYDOWN:
+
             if event.key == pg.K_q:
                 running = False
                 continue
@@ -129,10 +130,11 @@ while running:
             elif event.key == pg.K_LEFT:
                 game.move('LEFT')
             elif event.key == pg.K_RIGHT:
-                game.move('RIGHT')
+                game.move('RIGHT')           
 
-            if game.new_case():
-                game.draw_grid() 
+            if (game.prev_grid != game.grid).any():
+                if game.new_case():
+                    game.draw_grid()
 
     pg.display.set_caption(f"Score: {game.score}")
     pg.display.update()
