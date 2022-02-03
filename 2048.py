@@ -2,7 +2,7 @@ import pygame as pg
 import numpy as np
 
 pg.init()
-COTE = 100 # largeur du rectangle en pixels
+COTE = 126 # largeur du rectangle en pixels
 NB_CASES = 4
 screen = pg.display.set_mode((COTE*NB_CASES, COTE*NB_CASES))
 clock = pg.time.Clock()
@@ -55,16 +55,17 @@ class Game:
     
     def draw_case(self, x, y, val):
         size = self.cote
-        rect = pg.Rect(x*size+5, y*size+5, size-10, size-10)
+        edge = 7
+        rect = pg.Rect(x*size+edge, y*size+edge, size-2*edge, size-2*edge)
         pg.draw.rect(screen, self.colors[val], rect, border_radius=3)
 
         if val:
             if val < 10:
-                font_size = 65
+                font_size = 80
             else:
-                font_size = 45
+                font_size = 55
             font_obj = pg.font.SysFont("Helvetica Neue", font_size)
-            digit = font_obj.render(str(2**val), True, (255, 255, 255))
+            digit = font_obj.render(str(2**val), True, (235,225,211))
             text_rect = digit.get_rect(center=((x+.5)*size, (y+.5)*size))
             screen.blit(digit, text_rect)
 
